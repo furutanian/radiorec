@@ -1,0 +1,10 @@
+MAILTO=""
+
+# ラジオ深夜便(AM)
+5  23  * * *		cd /root/radiorec/data; ../radio_rec R1 3900 shinyabin_23
+10  0  * * *		cd /root/radiorec/data; ../radio_rec R1 3300 shinyabin_00
+# ラジオ深夜便(FM)
+5   1  * * *		cd /root/radiorec/data; ../radio_rec FM 3600 shinyabin_01
+5   2  * * *		cd /root/radiorec/data; ../radio_rec FM 3600 shinyabin_02
+5   3  * * *		cd /root/radiorec/data; ../radio_rec FM 3600 shinyabin_03
+5   4  * * *		cd /root/radiorec/data; ../radio_rec FM 3300 shinyabin_04

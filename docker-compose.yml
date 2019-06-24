@@ -1,0 +1,32 @@
+version: '3'
+services:
+    radiorec:
+        image:
+            docker.io/furutanian/radiorec
+        container_name:
+            radiorec_alpha
+        build:
+            context:
+                .
+#           args:
+#               http_proxy: http://user_abc:password@proxy.example.com:8080/
+#               https_proxy: http://user_abc:password@proxy.example.com:8080/
+        privileged:
+            true
+        environment:
+            TZ: Asia/Tokyo
+#           http_proxy: http://user_abc:password@proxy.example.com:8080/
+#           https_proxy: http://user_abc:password@proxy.example.com:8080/
+        volumes:
+            - pv:/root/radiorec/data
+        command:
+            bash -c 'bash startup.sh && /sbin/init'
+
+# mkdir pv しておくこと
+volumes:
+    pv:
+        driver_opts:
+            type: none
+            device: /root/docker/radiorec/pv
+            o: bind
+

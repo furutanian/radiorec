@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby
+
+channels = {
+	'R1' => {
+		:URI	=> 'https://nhkradioakr1-i.akamaihd.net/hls/live/511633/1-r1/1-r1-01.m3u8',
+	},
+	'R2' => {
+		:URI	=> 'https://nhkradioakr2-i.akamaihd.net/hls/live/511929/1-r2/1-r2-01.m3u8',
+	},
+	'FM' => {
+		:URI	=> 'https://nhkradioakfm-i.akamaihd.net/hls/live/512290/1-fm/1-fm-01.m3u8',
+	},
+}
+
+now = Time.now
+
+channel	= channels[ARGV[0].upcase] or raise('invalid channel.')
+seconds	= ARGV[1].to_i
+finish	= Time.now + seconds
+title	= ARGV[2]
+prefix	= now.strftime('%%s%y%U%w') % title[0]
+
+tries = -1; aacs = []; while((t = (finish - Time.now).to_i) > 30)
+	(tries += 1) > 9 and break
+
+	aacs << '%s%s%d' % [prefix, title, tries]
+	start = Time.now; p 'start'
+
+	p('ffmpeg -i %s -t %d -c copy _tmp_%s.aac' % [
+		channel[:URI],
+		t,
+		aacs.last,
+	])
+	system('ffmpeg -i %s -t %d -c copy _tmp_%s.aac' % [
+		channel[:URI],
+		t,
+		aacs.last,
+	])
+
+	crash = Time.now; p 'crash?'
+	crash - start < 2 and sleep 2
+end
+
+aacs.each {|aac|
+	p('ffmpeg -i _tmp_%s.aac %s.mp3' % [
+		aac,
+		aac,
+	])
+	system('ffmpeg -i _tmp_%s.aac %s.mp3' % [
+		aac,
+		aac,
+	])
+}
+
+__END__
+
