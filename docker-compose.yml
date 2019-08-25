@@ -4,13 +4,15 @@ services:
         image:
             docker.io/furutanian/radiorec
         container_name:
-            radiorec_alpha
+            radiorec-alpha
         build:
             context:
                 .
 #           args:
 #               http_proxy: http://user_abc:password@proxy.example.com:8080/
 #               https_proxy: http://user_abc:password@proxy.example.com:8080/
+        restart:
+            always
         privileged:
             true
         environment:
